@@ -1,28 +1,32 @@
-import { useEffect, useState } from "react"
-import { Card } from "react-bootstrap";
+import { useEffect } from "react"
+import { Alert, Card } from "react-bootstrap";
 import {Button} from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { add } from "../store/cartSlice";
+import { getProducts } from "../store/productSlice";
+import StatusCode from "../utils/StatusCode";
+
 
 export default function Products(){
 
-    const dispatch = useDispatch();
-
-    const [products, getProducts]= useState([])
+    const d = useDispatch();
+    const {data:products,status} = useSelector(state=> state.products)
 
     useEffect(() => {
-        fetch('https://fakestoreapi.com/products')
-        .then(data=>data.json())
-        .then(result => getProducts(result))
-        // return () => {
-        //     cleanup
-        // };
+       d(getProducts())
     }, []);
 
   function addToCart(product){
-        dispatch(add(product))
+        d(add(product))
     }
 
+    if(status === StatusCode.LOADING){
+        return <div>Loading...</div>
+    }
+
+    if(status === StatusCode.ERROR){
+        return <Alert key="danger" variant="danger">Something went wrong, Please try again!</Alert>
+    }
     const cards = products.map(product=>(
         <div className="col-md-3" style={{marginBottom:'10px'}}>
             <Card key={product.id} className="h-100" >
