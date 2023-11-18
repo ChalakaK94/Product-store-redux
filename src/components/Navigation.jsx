@@ -1,8 +1,11 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 
 import { Link } from 'react-router-dom';
 
 export default function Navigation(){
+
+  const cartData = useSelector(state=> state.cart);
 
     return(
       <>        
@@ -16,7 +19,7 @@ export default function Navigation(){
           <Navbar.Toggle/>
           <Navbar.Collapse className='justify-content-end'>
             <Navbar.Text>
-                <Nav.Link to="/cart" as={Link}>My Bag 0</Nav.Link>
+                <Nav.Link to="/cart" as={Link}>My Bag {cartData.length}</Nav.Link>
             </Navbar.Text>
           </Navbar.Collapse>
       </Container>
